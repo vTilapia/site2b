@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo Pong</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      margin: auto;
+      background: #111;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="pong" width="800" height="500"></canvas>
+
+  <script>
+    const canvas = document.getElementById("pong");
+    const ctx = canvas.getContext("2d");
+
+    // Criar retângulos (raquetes e bola)
+    function drawRect(x, y, w, h, color) {
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, w, h);
+    }
+
+    // Criar círculo (a bola)
+    function drawCircle(x, y, r, color) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2, false);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Escrever texto (placar)
+    function drawText(text, x, y, color) {
+      ctx.fillStyle = color;
+      ctx.font = "50px Arial";
+      ctx.fillText(text, x, y);
+    }
+
+    // Jogador
+    const user = {
+      x: 0,
+      y: canvas.height / 2 - 50,
+      width: 10,
+      height: 100,
+      color: "white",
+      score: 0
+    };
+
+    // Computador
+    const com = {
+      x: canvas.width - 10,
+      y: canvas.height / 2 - 50,
+      width: 10,
+      height: 100,
+      color: "white",
+      score: 0
+    };
+
+    // Bola
+    const ball = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      radius: 10,
+      speed: 5,
+      velocityX: 5,
+      velocityY: 5,
+      color: "white"
+    };
+
+    // Desenhar a rede
+    function drawNet() {
+      for (let i = 0; i <= canvas.height; i += 15) {
+        drawRect(canvas.width / 2 - 1, i, 2, 10, "white");
+      }
+    }
+
+    // Atualizar posição
+    function update() {
+      // Movimentar a bola
+      ball.x += ball.velocityX;
+      ball.y += ball.velocityY;
+
+      // Controle do computador (IA simples)
+      com.y += (ball.y - (com.y + com.height / 2)) * 0.05;
+
+      // Colisão com as bordas
+      if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+        ball.velocityY = -ball.velocityY;
+      }
+
+      // Verifica colisões com jogadores
+      let player = (ball.x < canvas.width / 2) ? user : com;
+
+      if (collision(ball, player)) {
+        let angle = 0;
+
+        // Onde a bola toca na raquete
+        let intersectY = ball.y - (player.y + player.height / 2);
+        intersectY /= player.height / 2;
+
+        angle = intersectY * (Math.PI / 4);
+        let direction = (ball.x < canvas.width / 2) ? 1 : -1;
+
+        ball.velocityX = direction * ball.speed * Math.cos(angle);
+        ball.velocityY = ball.speed * Math.sin(angle);
+
+        // Aumenta velocidade da bola
+        ball.speed += 0.5;
+      }
+
+      // Pontuação
+      if (ball.x - ball.radius < 0) {
+        com.score++;
+        resetBall();
+      } else if (ball.x + ball.radius > canvas.width) {
+        user.score++;
+        resetBall();
+      }
+    }
+
+    // Detecta colisão entre bola e raquete
+    function collision(b, p) {
+      return b.x < p.x + p.width &&
+             b.x + b.radius > p.x &&
+             b.y < p.y + p.height &&
+             b.y + b.radius > p.y;
+    }
+
+    // Resetar a bola após ponto
+    function resetBall() {
+      ball.x = canvas.width / 2;
+      ball.y = canvas.height / 2;
+      ball.speed = 5;
+      ball.velocityX = -ball.velocityX;
+      ball.velocityY = 5;
+    }
+
+    // Renderizar
+    function render() {
+      drawRect(0, 0, canvas.width, canvas.height, "#000");
+      drawNet();
+      drawText(user.score, canvas.width / 4, 50, "white");
+      drawText(com.score, 3 * canvas.width / 4, 50, "white");
+      drawRect(user.x, user.y, user.width, user.height, user.color);
+      drawRect(com.x, com.y, com.width, com.height, com.color);
+      drawCircle(ball.x, ball.y, ball.radius, ball.color);
+    }
+
+    // Loop principal
+    function game() {
+      update();
+      render();
+    }
+
+    // 60 FPS
+    setInterval(game, 1000 / 60);
+
+    // Movimento do jogador
+    canvas.addEventListener("mousemove", movePaddle);
+
+    function movePaddle(evt) {
+      let rect = canvas.getBoundingClientRect();
+      user.y = evt.clientY - rect.top - user.height / 2;
+    }
+  </script>
+</body>
+</html>
+

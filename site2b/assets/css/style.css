@@ -1,0 +1,94 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+.navbar {
+    background-color: #002D72; /* Azul da bandeira do Reino Unido */
+    padding: 15px 0;
+    text-align: center;
+}
+
+.nav-button {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.imagem-carrossel {
+  width: 100%; /* A imagem ocupará 100% da largura do seu contêiner */
+  height: auto; /* Mantém a proporção da imagem para que não fique distorcida */
+  object-fit: cover; /* Recorta a imagem para preencher o espaço sem distorcer */
+}
+
+.imagem-media {
+  width: 600px;
+  height: 400px;
+}
+
+.imagem-pequena {
+  width: 300px;
+  height: 200px;
+}
+
+.nav-button:hover {
+    background-color: #011E49;
+}
+
+.container {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 0 20px;
+    text-align: center;
+}
+
+.carousel-container {
+    overflow: hidden;
+    margin-top: 30px;
+    position: relative;
+    width: 100%;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+    min-width: 100%;
+    /* ou um valor para mostrar várias imagens */
+    box-sizing: border-box;
+}
+
+.carousel-item img {
+    width: 100%;
+    display: block;
+}
+
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+.footer-button {
+    background-color: #555;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.footer-button:hover {
+    background-color: #777;
+}
